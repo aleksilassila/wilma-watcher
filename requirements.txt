@@ -1,0 +1,15 @@
+beautifulsoup4==4.9.1
+certifi==2020.4.5.1
+chardet==3.0.4
+future==0.18.2
+idna==2.9
+jodel-api==1.2.11
+mock==4.0.2
+noise==1.2.2
+protobuf==3.11.3
+requests==2.23.0
+six==1.12.0
+soupsieve==2.0.1
+urllib3==1.25.8
+varint==1.0.2
+websockets==8.1

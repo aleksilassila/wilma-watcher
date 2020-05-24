@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from time import sleep
 
 class Wilma:
-	def __init__(self, username, password):
+	def __init__(self, username=os.environ.get('WUSERNAME').replace("_", "."), password=os.environ.get('WPASSWORD')):
 		self.sessionID = None
 		self.Wilma2SID = None
 
@@ -68,15 +68,18 @@ class Wilma:
 			elif tags[index].text == "Maksimikoko":
 				maksimikoko = tags[index + 1].text
 
-		self.sendPush(f"Kurssilla on {ilmoittautuneita}/{maksimikoko}")
+		if int(ilmoittautuneita) < int(maksimikoko): self.sendPush(f"Kurssilla on tilaa: {ilmoittautuneita}/{maksimikoko}")
 		return True
 
 	def sendPush(self, message):
-		print(message)
+		token = os.environ.get("PTOKEN")
+		user = os.environ.get("PUSER")
+		requests.post(f"https://api.pushover.net/1/messages.json?token={token}&user={user}&title=Wilma-Watcher&message={message}")
+		print(f"Sent '{message}'")
 
 if __name__ == "__main__":
 	course = os.environ.get('COURSEID')
-	w = Wilma(os.environ.get('WUSERNAME').replace("_", "."), os.environ.get('WPASSWORD'))
+	w = Wilma()
 	w.login()
 
 	while True:

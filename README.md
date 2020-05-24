@@ -7,8 +7,8 @@ A piece of python api for wilma. Used to check whether or not there is space on 
 create `.env` file and source it using `source <filename>` command on unix-system.
 
 ```
-export USERNAME=
-export PASSWORD=
+export WUSERNAME=
+export WPASSWORD=
 export COURSEID=
 ```
 

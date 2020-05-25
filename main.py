@@ -61,6 +61,7 @@ class Wilma:
 
 		soup = BeautifulSoup(r.text, features="html.parser")
 		tags = soup.find_all(["th", "td"])
+		name = soup.find_all("td", class_="coursename")[0].text
 
 		for index in range(0, len(tags)):
 			if tags[index].text == "Ilmoittautuneita":
@@ -68,24 +69,31 @@ class Wilma:
 			elif tags[index].text == "Maksimikoko":
 				maksimikoko = tags[index + 1].text
 
-		if int(ilmoittautuneita) < int(maksimikoko): self.sendPush(f"Kurssilla on tilaa: {ilmoittautuneita}/{maksimikoko}")
-		return True
+		if int(ilmoittautuneita) < int(maksimikoko):
+			print("\nKurssilla on tilaa!!\n")
+			self.sendPush(name, f"Kurssilla on tilaa: {ilmoittautuneita}/{maksimikoko}")
+			return True
+		else:
+			print(f"Ei tilaa: {ilmoittautuneita}/{maksimikoko}")
+			return False
 
-	def sendPush(self, message):
+	def sendPush(self, name, message):
 		token = os.environ.get("PTOKEN")
 		user = os.environ.get("PUSER")
-		requests.post(f"https://api.pushover.net/1/messages.json?token={token}&user={user}&title=Wilma-Watcher&message={message}")
+		requests.post(f"https://api.pushover.net/1/messages.json?token={token}&user={user}&title=Wilma-Watcher for {name}&message={message}")
 		print(f"Sent '{message}'")
 
 if __name__ == "__main__":
-	course = os.environ.get('COURSEID')
+	courses = os.environ.get('COURSEID').split(",")
 	w = Wilma()
 	w.login()
 
 	while True:
-		check = w.checkCourse(course)
-		if check == None:
-			w.login()
-			w.checkCourse(course)
+		for course in courses:
+			check = w.checkCourse(course)
+			if check == None:
+				w.login()
+				w.checkCourse(course)
+			sleep(1)
 
 		sleep(60*7)

@@ -1,4 +1,4 @@
-import requests, re, os
+import requests, re, os, json
 from bs4 import BeautifulSoup
 from time import sleep
 
@@ -77,10 +77,14 @@ class Wilma:
 			print(f"Ei tilaa: {ilmoittautuneita}/{maksimikoko}")
 			return False
 
+
 	def sendPush(self, name, message):
 		token = os.environ.get("PTOKEN")
 		user = os.environ.get("PUSER")
-		requests.post(f"https://api.pushover.net/1/messages.json?token={token}&user={user}&title=Wilma-Watcher for {name}&message={message}")
+		requests.post(
+			os.environ.get("SURL"),
+			data = json.dumps({"text": f"{name}:\n{message}"})
+		)
 		print(f"Sent '{message}'")
 
 if __name__ == "__main__":

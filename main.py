@@ -98,8 +98,8 @@ class Wilma:
 
 if __name__ == "__main__":
 	courses = os.environ.get('COURSEID').split(",")
-	w = loginWilma()
-	w.()
+	w = Wilma()
+	w.login()
 
 	while True:
 		for course in courses:
